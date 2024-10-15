@@ -11,12 +11,40 @@ class SQLConnection {
 	sequelize: Sequelize;
 
 	async connect() {
-		this.sequelize = new Sequelize(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_ENDPOINT}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB_NAME}`,
-			{
-				logging: false, // Disables logging
-			}
-		)
+		console.log(process.env.POSTGRES_PASSWORD)
 
+		var password = encodeURI(process.env.POSTGRES_PASSWORD)
+
+
+
+		console.log("password : ", password)
+
+
+		this.sequelize = new Sequelize({
+			database: process.env.POSTGRES_DB_NAME,
+			username: process.env.POSTGRES_USER,
+			password: process.env.POSTGRES_PASSWORD,
+			host: process.env.POSTGRES_ENDPOINT,
+			port: parseInt(process.env.POSTGRES_PORT),
+			dialect: "postgres",
+			dialectOptions: {
+				ssl: {
+					require: true,
+					rejectUnauthorized: false
+				}
+			}
+		});
+
+
+
+		/*
+		
+				this.sequelize = new Sequelize(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_ENDPOINT}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB_NAME}`,
+					{
+						logging: false, // Disables logging
+					}
+				)
+		*/
 		try {
 			await this.sequelize.authenticate();
 			//console.log('Connection has been established successfully.');
