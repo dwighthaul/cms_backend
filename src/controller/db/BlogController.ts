@@ -14,7 +14,7 @@ class BlogController {
 	// Get all blogs
 	getBlogs = async (req: Request, res: Response) => {
 		try {
-			const blogs = await Blog.findAll();
+			const blogs = await Blog.findAll({ order: [['id', 'DESC'], ['updatedAt', 'ASC']] });
 			res.json(blogs);
 		} catch (err) {
 			res.status(500).json({ message: err.message });
@@ -60,9 +60,6 @@ class BlogController {
 
 	// Update an existing blog
 	updateBlog = async (req: Request, res: Response) => {
-
-		console.log("updateBlog")
-		console.log("req.params : " + req.params)
 
 		try {
 			const { id } = req.params;
